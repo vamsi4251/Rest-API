@@ -1,6 +1,7 @@
 package com.example.demo.service.imp;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +42,25 @@ public class emp_service_emp implements employeeservice {
 
 	@Override
 	public void deleteusers(int id) {
-		// TODO Auto-generated method stub
+		employee e=this.repo.findById(id).orElseThrow(()->new ResourceNotFoundException("employee","id", id));
+		
+		this.repo.delete(e);
 
 	}
 
 	@Override
 	public List<employee_payload> getall() {
-		// TODO Auto-generated method stub
-		return null;
+		List<employee> e=(List<employee>) this.repo.findAll();
+		
+		List<employee_payload> emp=e.stream().map(employ -> this.employee_dto(employ)).collect(Collectors.toList());
+		
+		return emp;
 	}
 
 	@Override
 	public employee_payload getbyid(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		employee e=this.repo.findById(id).orElseThrow(()->new ResourceNotFoundException("employee","id", id));
+		return this.employee_dto(e);
 	}
 	
 	
